@@ -109,9 +109,18 @@ async def chat(session_id: UUID, payload: ChatRequest):
                     raise
                 result = await provider_for(settings.fallback_provider, settings).stream(history)
             answer = ""
-            async for token in result.tokens:
-                answer += token
-                yield sse("token", {"text": token})
+            try:
+                async for token in result.tokens:
+                    answer += token
+                    yield sse("token", {"text": token})
+            except ProviderUnavailable:
+                # A fallback is safe only before the primary has emitted user-visible text.
+                if answer or not settings.fallback_provider:
+                    raise
+                result = await provider_for(settings.fallback_provider, settings).stream(history)
+                async for token in result.tokens:
+                    answer += token
+                    yield sse("token", {"text": token})
             saved = save_message(session_id, "assistant", answer, result.provider, result.model, round((time.perf_counter() - started) * 1000))
             save_citations(saved["id"], chunks)
             yield sse("citations", {"items": [{"chunk_id": str(item.id), "episode_title": item.episode_title, "guest_name": item.guest_name, "source_url": item.source_url} for item in chunks]})
