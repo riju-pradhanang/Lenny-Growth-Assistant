@@ -10,6 +10,11 @@ class Settings(BaseSettings):
     ollama_model: str = "qwen2.5:7b"
     ollama_base_url: str = "http://host.docker.internal:11434"
     anthropic_model: str = "claude-sonnet-4-5"
+    anthropic_api_key: str | None = None
+    embedding_model: str = "nomic-embed-text"
+    max_retrieved_chunks: int = 5
+    retrieval_distance_threshold: float = 0.8
+    model_timeout_seconds: float = 60.0
 
 
 @lru_cache
