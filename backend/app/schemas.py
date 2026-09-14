@@ -39,3 +39,20 @@ class Message(BaseModel):
     token_count: int | None = None
     created_at: datetime
     citations: list[Citation] = []
+
+
+class ArtifactGenerateRequest(BaseModel):
+    type: Literal["markdown", "html"] = "markdown"
+    prompt: str | None = Field(default=None, max_length=2000)
+    message_id: UUID | None = None
+
+
+class ArtifactResponse(BaseModel):
+    id: UUID
+    session_id: UUID
+    message_id: UUID | None = None
+    type: Literal["markdown", "html"]
+    content: str
+    version: int
+    created_at: datetime
+
