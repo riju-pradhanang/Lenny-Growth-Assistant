@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
-    database_url: str = "postgresql+psycopg://lenny:change-me-before-sharing@postgres:5432/lenny_growth"
+    database_url: str = "postgresql+psycopg://lenny:postgres123@postgres:5432/lenny_growth"
     ai_provider: str = "ollama"
     fallback_provider: str | None = None
     ollama_model: str = "qwen2.5:7b"
