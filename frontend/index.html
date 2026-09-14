@@ -1,3 +1,77 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lenny Growth Assistant</title></head>
-<body><main><h1>Lenny Growth Assistant</h1><p>Phase 1 foundation is running. The chat interface arrives in Phase 3.</p></main></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lenny Growth Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo">LG</div>
+      <div class="brand-title">Lenny Growth Assistant</div>
+    </div>
+    <div class="header-status">
+      <div id="health-badge" class="status-badge">
+        <span class="status-dot"></span> Checking DB...
+      </div>
+      <div id="provider-badge" class="model-pill">
+        Provider: <strong>OLLAMA</strong> (llama3.1:8b)
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace Container (Sidebar + Chat + Artifact Viewer) -->
+  <div class="workspace-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button id="btn-new-chat" class="btn-new-chat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Chat
+        </button>
+      </div>
+      <ul id="session-list" class="session-list"></ul>
+    </aside>
+
+    <!-- Chat Main Workspace -->
+    <main class="chat-main">
+      <div id="messages-container" class="messages-container"></div>
+      <div class="chat-input-bar">
+        <form id="chat-form" class="input-wrapper">
+          <textarea id="chat-input" class="chat-textarea" placeholder="Ask about growth, product strategy, or request a Ship 30 essay..." rows="1"></textarea>
+          <button type="submit" id="btn-send" class="btn-send" title="Send message">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- Artifact Viewer Panel (Rendered beside chat) -->
+    <aside id="artifact-panel" class="artifact-panel hidden">
+      <div class="artifact-header">
+        <div class="artifact-title-group">
+          <span id="artifact-title" class="artifact-title">Artifact</span>
+          <span id="artifact-type-tag" class="artifact-type-tag">HTML</span>
+        </div>
+        <div class="artifact-actions">
+          <button id="btn-toggle-raw" class="btn-action-pill">Raw Source</button>
+          <button id="btn-download-artifact" class="btn-action-pill">Download</button>
+          <button id="btn-close-artifact" class="btn-action-pill" title="Close panel">✕</button>
+        </div>
+      </div>
+      <div class="artifact-security-banner">
+        <span>🛡️ Sandboxed Viewer: Scripts blocked (allow-same-origin only). Safe HTML subset enforced.</span>
+      </div>
+      <div id="artifact-content" class="artifact-content-container"></div>
+    </aside>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
