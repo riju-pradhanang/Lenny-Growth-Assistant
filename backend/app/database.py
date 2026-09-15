@@ -3,4 +3,7 @@ from app.config import get_settings
 
 
 def get_engine():
-    return create_engine(get_settings().database_url, pool_pre_ping=True)
+    url = get_settings().database_url
+    if url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+    return create_engine(url, pool_pre_ping=True)
