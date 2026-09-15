@@ -125,14 +125,26 @@ def sse(event: str, data: dict) -> str:
 
 @app.post("/sessions/{session_id}/chat")
 async def chat(session_id: UUID, payload: ChatRequest):
-    if not session_exists(session_id):
-        raise HTTPException(404, "Session not found")
+    try:
+        if not session_exists(session_id):
+            raise HTTPException(404, "Session not found")
+    except SQLAlchemyError:
+        async def db_err_stream():
+            yield sse(
+                "error",
+                {
+                    "code": "database_unavailable",
+                    "message": "Conversation could not be saved because the database is unavailable.",
+                },
+            )
+        return StreamingResponse(db_err_stream(), media_type="text/event-stream")
+
     settings = get_settings()
-    save_message(session_id, "user", payload.content)
 
     async def response_stream():
         started = time.perf_counter()
         try:
+            save_message(session_id, "user", payload.content)
             intent = classify_intent(payload.content)
             yield sse("intent", {"intent": intent})
 

@@ -26,6 +26,8 @@ async def embed_query(query: str, settings: Settings) -> list[float]:
             response = await client.post(f"{settings.ollama_base_url.rstrip('/')}/api/embeddings", json={"model": settings.embedding_model, "prompt": query})
             response.raise_for_status()
             return response.json()["embedding"]
+    except httpx.TimeoutException as exc:
+        raise ProviderUnavailable(f"Embedding request timed out after {settings.model_timeout_seconds}s. Start Ollama and check model load.") from exc
     except (httpx.HTTPError, KeyError) as exc:
         raise ProviderUnavailable("Local embedding model is unavailable. Start Ollama and pull nomic-embed-text.") from exc
 

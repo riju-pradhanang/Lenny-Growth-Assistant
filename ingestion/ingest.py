@@ -10,7 +10,7 @@ import psycopg
 
 ROOT = Path(__file__).parent
 TRANSCRIPTS = ROOT / "transcripts"
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://lenny:change-me-before-sharing@localhost:5432/lenny_growth").replace("+psycopg", "")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://lenny:postgres123@localhost:5432/lenny_growth").replace("+psycopg", "")
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "nomic-embed-text")
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "900"))

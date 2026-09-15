@@ -40,6 +40,10 @@ class OllamaProvider:
                                 token = payload.get("message", {}).get("content")
                                 if token:
                                     yield token
+            except httpx.TimeoutException as exc:
+                raise ProviderUnavailable(
+                    f"Local model request timed out after {self.settings.model_timeout_seconds}s. Try again or check model responsiveness."
+                ) from exc
             except (httpx.HTTPError, json.JSONDecodeError) as exc:
                 raise ProviderUnavailable("Local model is unavailable. Start Ollama and try again.") from exc
 
@@ -66,6 +70,11 @@ class AnthropicProvider:
                     async for text in stream.text_stream:
                         yield text
             except Exception as exc:
+                exc_str = str(exc).lower()
+                if "timeout" in exc_str or type(exc).__name__ == "APITimeoutError":
+                    raise ProviderUnavailable(
+                        f"Cloud model request timed out after {self.settings.model_timeout_seconds}s. Check network connectivity and try again."
+                    ) from exc
                 raise ProviderUnavailable("Cloud model request failed. Check the API key and try again.") from exc
 
         return ProviderResponse(self.name, self.settings.anthropic_model, tokens())
